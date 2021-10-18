@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-import { BadRequestError } from '../errors/bad-request-error';
-import { RequestValidationError } from '../errors/request-validation-error';
 import { UniqueFieldViolationError } from '../errors/unique-field-violation-error';
+import { validateRequest } from '../middlewares/validate-request';
 import { User } from '../models/user';
 
 const router = express.Router();
@@ -18,12 +17,8 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage('Password must be between 4 and 20 characters'),
   ],
+  validateRequest,
   async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    // console.log(errors.array(), errors.isEmpty());
-    if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
-    }
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -31,10 +26,6 @@ router.post(
         'email',
         `User with email ${existingUser.email} already exists`
       );
-      // throw new BadRequestError(
-      //   409,
-      //   `User with email ${existingUser.email} already exists`
-      // );
     }
 
     const user = User.build({ email, password });
@@ -53,10 +44,6 @@ router.post(
     req.session = { jwt: userJwt };
 
     res.status(201).send(user);
-
-    // console.log('creating user....');
-    // throw new DatabaseConnectionError();
-    // res.send({ email, password });
   }
 );
 

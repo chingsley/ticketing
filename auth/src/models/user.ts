@@ -8,20 +8,20 @@ interface UserAttrs {
   password: string;
 }
 
-// An interface that describes the properties
-// that a User Model has
-interface UserModel extends mongoose.Model<UserDoc> {
-  build(attrs: UserAttrs): UserDoc;
-}
-
-// An interface that describes the properties
+// An interface that describes the properties/methods
 // that a User document (ie. a single from db user) has
-interface UserDoc extends mongoose.Document {
-  email: string;
-  password: string;
+// NOTE: a User document = user = an instance of a User
+interface UserDoc extends UserAttrs, mongoose.Document {
+  matchPassword(password: string): Promise<boolean>;
   // if we setup the user model to include timestamps, we would add the next 2 lines
   // createdAt: string;
   // updatedAt: string;
+}
+
+// An interface that describes the properties/methods
+// that a User Model has
+interface UserModel extends mongoose.Model<UserDoc> {
+  build(attrs: UserAttrs): UserDoc;
 }
 
 const userSchema = new mongoose.Schema(
@@ -57,6 +57,10 @@ userSchema.pre('save', async function (done) {
 
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
+};
+
+userSchema.methods.matchPassword = function (suppliedPassword: string) {
+  return Password.compare(this.password, suppliedPassword);
 };
 
 const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
