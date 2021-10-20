@@ -5,8 +5,11 @@ import { BadRequestError } from '../errors/bad-request-error';
 import { validateRequest } from '../middlewares/validate-request';
 import { User } from '../models/user';
 import { messages as msg } from '../constants/messages';
+import { errorCodes } from '../constants/error-codes';
 
 const router = express.Router();
+
+const { USER_NOT_FOUND, WRONG_PASSWORD } = errorCodes;
 
 router.post(
   '/api/users/signin',
@@ -23,11 +26,11 @@ router.post(
     const { INVALID_CREDENTIALS } = msg;
     const user = await User.findOne({ email });
     if (!user) {
-      throw new BadRequestError(INVALID_CREDENTIALS, 401, 'AUTH001');
+      throw new BadRequestError(INVALID_CREDENTIALS, 401, USER_NOT_FOUND);
     }
     const matchingPassword = await user.matchPassword(password);
     if (!matchingPassword) {
-      throw new BadRequestError(INVALID_CREDENTIALS, 401, 'AUTH002');
+      throw new BadRequestError(INVALID_CREDENTIALS, 401, WRONG_PASSWORD);
     }
     const userJwt = jwt.sign(
       {

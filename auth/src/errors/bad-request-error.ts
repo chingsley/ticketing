@@ -2,7 +2,6 @@ import { CustomError } from './custom-error';
 
 export class BadRequestError extends CustomError {
   statusCode = this.httpStatusCode || 400;
-  errorCode = this.errCode;
 
   constructor(
     public msg: string,
@@ -15,7 +14,7 @@ export class BadRequestError extends CustomError {
   }
 
   serializeErrors() {
-    return [{ message: this.msg, errorCode: this.errorCode }];
+    return [{ message: this.msg, errorCode: this.errCode }];
   }
 }
 
