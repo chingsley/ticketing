@@ -18,3 +18,4 @@ The application is fullstack built with NodeJS and Typescript for backend and Re
 - Docker
 - Kubernetes
 - Event management is microservices
+- Tests
