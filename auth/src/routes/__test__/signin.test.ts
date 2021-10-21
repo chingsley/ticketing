@@ -17,6 +17,7 @@ it('returns status 401 with errorCode AUTH001 if email does not exist', async ()
 
 it('returns 401 and errorCode AUTH002 for wrong password', async () => {
   const email = 'test@test.com';
+  
   await request(app)
     .post('/api/users/signup')
     .send({ email, password: 'password'})
