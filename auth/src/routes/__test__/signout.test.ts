@@ -12,7 +12,7 @@ it('clears the cookie on signout', async () => {
     .send({})
     .expect(200);
 
-  console.log(res.get('Set-Cookie'));
+  // console.log(res.get('Set-Cookie'));
   expect(res.get('Set-Cookie')[0]).toEqual(
     'express:sess=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; httponly'
   );
