@@ -14,7 +14,7 @@ it('gets current user info', async () => {
   expect(res.body.currentUser.email).toEqual(email);
 });
 
-it('returns null value for currentUser if user is not signed in', async () => {
+it('returns null value for currentUser if user is not signed in (i.e no Cookie was set)', async () => {
   const res = await request(app)
     .get('/api/users/currentuser')
     .send()
