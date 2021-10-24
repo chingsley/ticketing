@@ -1,52 +1,60 @@
 import { useState } from 'react';
-import axios from 'axios';
+import useRequest from '../../hooks/use-request';
 
-function Signup  () {
+function Signup() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [errors, setErrors ] = useState([])
+  const { sendRequest, errors, setErrors } = useRequest();
+  const emailError = errors.find(({ field }) => field === 'email');
+  const passwordError = errors.find(({ field }) => field === 'password');
+  console.log('emailError', emailError);
 
   const handleInputChange = (e) => {
-    setFormData({  ...formData, [e.target.name]: e.target.value})
-  }
-  
-  const onSubmit = async e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors([]);
+  };
+
+  const onSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const res = await axios.post('/api/users/signup', formData);
-      console.log(res.data)
-    } catch(err) {
-      console.log(err.response.data)
-      setErrors(err.response.data.errors)
-    }
-
-  }
+    sendRequest({
+      url: '/api/users/signup',
+      body: formData,
+      method: 'post',
+    });
+  };
 
   return (
     <form onSubmit={onSubmit}>
       <h1>Sign UP</h1>
       <div className='form-group'>
         <label htmlFor='email'>Email Address</label>
-        <input type='text' className='form-control' name="email" value={formData.email} onChange={handleInputChange}/>
+        <input
+          type='text'
+          className={emailError ? 'form-control input-error' : 'form-control'}
+          name='email'
+          value={formData.email}
+          onChange={handleInputChange}
+        />
       </div>
+      {console.log('errors: ', errors)}
       <div className='form-group'>
         <label htmlFor='password'>Email Address</label>
-        <input type='password' className='form-control' name="password"  value={formData.password} onChange={handleInputChange}/>
+        <input
+          type='password'
+          className={
+            passwordError ? 'form-control input-error' : 'form-control'
+          }
+          name='password'
+          value={formData.password}
+          onChange={handleInputChange}
+        />
       </div>
-      {errors.length > 0 && (
-          <div className="alert alert-danger">
-            <h4>Ooops...</h4>
-            <ul className="my-0">
-              {errors.map(err => <li key={err.message}>{err.message}</li>)}
-            </ul>
-        </div>
-      )}
       <button className='btn btn-primary'>Sign Up</button>
     </form>
   );
-};
+}
 
 export default Signup;
