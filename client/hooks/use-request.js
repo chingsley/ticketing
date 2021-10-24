@@ -6,9 +6,10 @@ import { toast } from 'react-toastify';
 const useRequest = () => {
   const [errors, setErrors] = useState([]);
 
-  const sendRequest = async ({ url, method, body }) => {
+  const sendRequest = async ({ url, method, body, onSuccess }) => {
     try {
       const response = await axios[method](url, body);
+      onSuccess(response.data);
       return response.data;
     } catch (err) {
       const { errors } = err.response.data;

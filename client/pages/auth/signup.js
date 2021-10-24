@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 
 function Signup() {
@@ -23,6 +24,7 @@ function Signup() {
       url: '/api/users/signup',
       body: formData,
       method: 'post',
+      onSuccess: () => Router.push('/')
     });
   };
 
