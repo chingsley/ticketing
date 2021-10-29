@@ -4,12 +4,13 @@ import buildClient from '../api/build-client';
 
 function LandingPage({ currentUser }) {
   console.log(currentUser);
-  // axios.get('/api/users/currentuser').catch(err => console.log(err.message))
-  return <h1>landing</h1>;
+  const msg = currentUser ? 'You are signedIn' : 'You are NOT signed in';
+  return <h1>{msg}</h1>;
 }
 
 LandingPage.getInitialProps = async (context) => {
-  const { data } = await buildClient(context).get('/api/users/currentuser')
+  const axiosClient = buildClient(context);
+  const { data } = await axiosClient.get('/api/users/currentuser')
   return data; // this will be passed to the LandingPage component, where currentuser will be destructured from this 'data' object
  
  

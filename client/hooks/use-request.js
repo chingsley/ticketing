@@ -15,7 +15,7 @@ const useRequest = () => {
       const { errors } = err.response.data;
       setErrors(errors);
       for (let error of errors) {
-        toast(error.message);
+        toast.error(error.message);
       }
     }
   };
