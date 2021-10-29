@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 
-function Signup() {
+function Signin() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,7 +21,7 @@ function Signup() {
     e.preventDefault();
 
     sendRequest({
-      url: '/api/users/signup',
+      url: '/api/users/signin',
       body: formData,
       method: 'post',
       onSuccess: () => Router.push('/')
@@ -30,7 +30,7 @@ function Signup() {
 
   return (
     <form onSubmit={onSubmit}>
-      <h1>Sign UP</h1>
+      <h1>Sign In</h1>
       <div className='form-group'>
         <label htmlFor='email'>Email Address</label>
         <input
@@ -43,7 +43,7 @@ function Signup() {
       </div>
       {console.log('errors: ', errors)}
       <div className='form-group'>
-        <label htmlFor='password'>Password</label>
+        <label htmlFor='password'>Email Address</label>
         <input
           type='password'
           className={
@@ -54,9 +54,9 @@ function Signup() {
           onChange={handleInputChange}
         />
       </div>
-      <button className='btn btn-primary'>Sign Up</button>
+      <button className='btn btn-primary'>Sign In</button>
     </form>
   );
 }
 
-export default Signup;
+export default Signin;

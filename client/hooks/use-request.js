@@ -12,10 +12,11 @@ const useRequest = () => {
       onSuccess(response.data);
       return response.data;
     } catch (err) {
+      console.log({ err }, JSON.stringify(err));
       const { errors } = err.response.data;
       setErrors(errors);
       for (let error of errors) {
-        toast(error.message);
+        toast.error(error.message);
       }
     }
   };
