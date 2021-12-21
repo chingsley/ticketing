@@ -10,7 +10,7 @@ function Signup() {
   const { sendRequest, errors, setErrors } = useRequest();
   const emailError = errors.find(({ field }) => field === 'email');
   const passwordError = errors.find(({ field }) => field === 'password');
-  console.log('emailError', emailError);
+  // console.log('emailError', emailError);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,7 +41,7 @@ function Signup() {
           onChange={handleInputChange}
         />
       </div>
-      {console.log('errors: ', errors)}
+      {/* {console.log('errors: ', errors)} */}
       <div className='form-group'>
         <label htmlFor='password'>Email Address</label>
         <input

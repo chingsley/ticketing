@@ -9,11 +9,12 @@ function LandingPage({ currentUser }) {
 }
 
 LandingPage.getInitialProps = async (context) => {
+  console.log('LANDING PAGE!');
   const axiosClient = buildClient(context);
-  const { data } = await axiosClient.get('/api/users/currentuser')
+  const { data } = await axiosClient.get('/api/users/currentuser');
   return data; // this will be passed to the LandingPage component, where currentuser will be destructured from this 'data' object
- 
- 
+
+
   // if (typeof window === 'undefined') {
   //   // we are on the client server
   //   const { data } = await axios.get(
@@ -27,7 +28,7 @@ LandingPage.getInitialProps = async (context) => {
   //   const { data } = await axios.get('/api/users/currentuser');
   //   return data; // recall, from the server: res.body = { currentUser: null } or { currentUser: {...} }
   // }
-  
-}
+
+};
 
 export default LandingPage;
