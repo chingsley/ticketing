@@ -10,7 +10,7 @@ import { app } from '../app';
  * to be a function that returns a array of strings
  */
 declare global {
-  var signup: ({
+  var signin: ({
     email,
     password,
   }: {
@@ -58,7 +58,7 @@ afterAll(async () => {
  * the function is defined in the test setup.ts files which, as defined in
  * the "jest" section of package.json, only executes when jest runs the test
  */
-global.signup = async ({
+global.signin = async ({
   email,
   password,
 }: {
