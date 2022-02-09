@@ -2,9 +2,12 @@ import express from 'express';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
 
-
-import { errorHandler, NotFoundError } from '@chingsley_tickets/common';
-
+import {
+  errorHandler,
+  NotFoundError,
+  currentUser,
+} from '@chingsley_tickets/common';
+import { createTicketRouter } from './routes/new';
 
 const app = express();
 app.set('trust proxy', true);
@@ -16,15 +19,19 @@ app.use(
   })
 );
 
+// must be set below the cookieSession session
+app.use(currentUser);
+
 app.get('/api/users/healthcheck', (req, res) => {
   res.send('Auth service is up and running....');
 });
+
+app.use(createTicketRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();
 });
 
 app.use(errorHandler);
-
 
 export { app };

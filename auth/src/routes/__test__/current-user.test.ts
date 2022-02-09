@@ -3,7 +3,7 @@ import { app } from '../../app';
 
 it('gets current user info', async () => {
   const email = 'test@test.com';
-  const cookie = await global.signup({ email, password: 'password' });
+  const cookie = await global.signin({ email, password: 'password' });
 
   const res = await request(app)
     .get('/api/users/currentuser')
