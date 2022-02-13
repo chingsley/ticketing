@@ -8,6 +8,7 @@ import {
   currentUser,
 } from '@chingsley_tickets/common';
 import { createTicketRouter } from './routes/new';
+import { showTicketRouter } from './routes/show';
 
 const app = express();
 app.set('trust proxy', true);
@@ -27,6 +28,7 @@ app.get('/api/users/healthcheck', (req, res) => {
 });
 
 app.use(createTicketRouter);
+app.use(showTicketRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();
