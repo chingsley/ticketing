@@ -1,14 +1,12 @@
 import express, { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { body } from 'express-validator';
-import { BadRequestError, validateRequest } from '@chingsley_tickets/common';
+import { BadRequestError, validateRequest, constants } from '@chingsley_tickets/common';
 import { User } from '../models/user';
-import { messages as msg } from '../constants/messages';
-import { errorCodes } from '../constants/error-codes';
 
 const router = express.Router();
 
-const { EMAIL_NOT_FOUND, WRONG_PASSWORD } = errorCodes;
+const { EMAIL_NOT_FOUND, WRONG_PASSWORD } = constants.errorCodes;
 
 router.post(
   '/api/users/signin',
@@ -22,7 +20,7 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    const { INVALID_CREDENTIALS } = msg;
+    const { INVALID_CREDENTIALS } = constants.messages;
     const user = await User.findOne({ email });
     if (!user) {
       throw new BadRequestError(INVALID_CREDENTIALS, 401, EMAIL_NOT_FOUND);
