@@ -54,7 +54,7 @@ it('creates a ticket with valid inputs', async () => {
 
   const title = 'aslkdja';
 
-  await request(app)
+  const res = await request(app)
     .post('/api/tickets')
     .set('Cookie', global.signin())
     .send({ title, price: 20 });
