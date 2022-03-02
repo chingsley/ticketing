@@ -13,6 +13,9 @@ import { app } from '../app';
 declare global {
   var signin: () => string[];
 }
+
+jest.mock('../nats-wrapper'); // even though the relative path points to the actual impmementaiton of nats-wrapper, jest will intead import the mock version from '__mock__'
+
 let mongod: any;
 
 beforeAll(async () => {
@@ -25,6 +28,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks(); // b/w each test, we want to reset each mock function
   const collections = await mongoose.connection.db.collections();
 
   // delete all collections before each test

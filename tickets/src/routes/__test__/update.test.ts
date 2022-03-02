@@ -1,3 +1,4 @@
+import { natsWrapper } from '../../nats-wrapper';
 import { constants } from '@chingsley_tickets/common';
 import request from 'supertest';
 import mongoose from 'mongoose';
@@ -105,4 +106,22 @@ describe('Update Ticket', () => {
     expect(res3.body.title).toEqual(newTitle);
     expect(res3.body.price).toEqual(newPrice);
   });
+});
+
+it('publishes an event', async () => {
+  const cookie = global.signin();
+  const { title: newTitle, price: newPrice } = validPalyload();
+  const res = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send(validPalyload())
+    .expect(201);
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({ title: newTitle, price: newPrice })
+    .expect(200);
+  await request(app).get(`/api/tickets/${res.body.id}`).expect(200);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
