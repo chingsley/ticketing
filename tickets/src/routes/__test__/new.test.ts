@@ -1,3 +1,4 @@
+import { natsWrapper } from '../../nats-wrapper'; // even though the relative path points to the actual impmementaiton of nats-wrapper, jest will intead import the mock version from '__mock__'
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
@@ -63,4 +64,16 @@ it('creates a ticket with valid inputs', async () => {
   expect(tickets.length).toEqual(1);
   expect(tickets[0].price).toEqual(20);
   expect(tickets[0].title).toEqual(title);
+});
+
+it('publishes an event', async () => {
+  const title = 'aslkdja';
+
+  const res = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', global.signin())
+    .send({ title, price: 20 })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
