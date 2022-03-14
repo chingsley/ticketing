@@ -52,7 +52,7 @@ router.post(
     // PUblish an event saying that an order was created
     // TODO...
 
-    res.status(200).send(order);
+    res.status(201).send(order);
   }
 );
 
