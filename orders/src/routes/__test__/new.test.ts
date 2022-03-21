@@ -51,4 +51,6 @@ it('reserves a ticket', async() => {
   .set('Cookie', global.signin())
   .send({ ticketId: ticket.id })
   .expect(201);
-})
+});
+
+it.todo('emits an order created event')
