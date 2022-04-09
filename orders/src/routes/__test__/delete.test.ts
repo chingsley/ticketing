@@ -3,6 +3,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Order } from '../../models/order';
 import { Ticket } from '../../models/ticket';
+import { natsWrapper } from '../../nats-wrapper'; // even though the relative path points to the actual impmementaiton of nats-wrapper, jest will intead import the mocked version from '__mock__'
 
 
 it('marks an order as cancelled', async () => {
@@ -68,4 +69,30 @@ it('ensures user cannot cancel another user"s order', async () => {
   expect(message).toMatch(/not authorized/i)
 });
 
-it.todo("emits an order cancelled event");
+it("emits an order cancelled event", async () => {
+    // Create a ticket
+    const ticket = Ticket.build({
+      title: 'concert',
+      price: 20,
+    });
+    await ticket.save();
+  
+  
+    const user = global.signin();
+  
+    // make a request to build an order with this ticket
+    const { body: order} = await request(app)
+    .post('/api/orders')
+    .set('Cookie', user)
+    .send({ ticketId: ticket.id })
+    .expect(201);
+  
+    // make request to fetch the ordder
+    await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set('Cookie', user)
+    .send()
+    .expect(200);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
