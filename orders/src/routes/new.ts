@@ -4,6 +4,8 @@ import { NotFoundError, requireAuth, validateRequest, BadRequestError, OrderStat
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket';
 import { Order } from '../models/order';
+import { OrderCreatedPublisher } from './../events/publishers/order-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 
 const router = express.Router();
@@ -48,9 +50,23 @@ router.post(
       ticket,
     });
     await order.save();
-
-    // PUblish an event saying that an order was created
-    // TODO...
+    /**
+     * PUblish an event saying that an order was created
+     * NOTE: About 'expiresAt' sent as 'string' type in the published data:
+     * whenever we share timestamps across different services, we want to
+     * share them in a timezone-agnostic way. As a result, we provide a UTC timestamp
+     * SEE: https://getir.udemy.com/course/microservices-with-node-js-and-react/learn/lecture/19565052#overview (TIME: 2:20)
+     */
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price,
+      }
+    })
 
     res.status(201).send(order);
   }
