@@ -20,7 +20,7 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
     }
 
     // Unreserve the ticket by setting the orderId to null
-    ticket.set({ orderId: null });
+    ticket.set({ orderId: undefined });
 
     await ticket.save();
 
