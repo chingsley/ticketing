@@ -5,6 +5,7 @@ import {
   requireAuth,
   validateRequest,
   NotAuthorizedError,
+  BadRequestError,
   constants,
 } from '@chingsley_tickets/common';
 import { Ticket } from '../models/ticket';
@@ -31,6 +32,11 @@ router.put(
     if (!ticket) {
       throw new NotFoundError(`no ticket found for id ${req.params.id}`);
     }
+
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
+    }
+
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError(WRONG_TICKET_OWNER);
     }
@@ -53,7 +59,7 @@ router.put(
       price: ticket.price,
       userId: ticket.userId,
       version: ticket.version,
-    })
+    });
     res.send(ticket);
   }
 );
