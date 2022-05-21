@@ -21,8 +21,8 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_URL
-              value: "http://nats-srv:4222"
+              value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
-              value: "ticketing"
+              value: ticketing
             - name: REDIS_CLUSTER_ID
               value: expiration-redis-srv
