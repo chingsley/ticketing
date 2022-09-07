@@ -1,5 +1,6 @@
-import { OrderStatus } from '@chingsley_tickets/common';
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { OrderStatus } from '@chingsley_tickets/common';
 
 interface OrderAttrs {
   id: string; // SEE: orderSchema.statics.build BELOW => we don't want mongoose to generate an _id for the ticket. Instead we want the _id here to equal the _id of the same order from order service
@@ -42,6 +43,9 @@ const orderSchema = new mongoose.Schema({
     }
   }
 });
+
+orderSchema.set('versionKey', 'version'); // tells mongo to NOT use _v attribute in the document, but to use 'version' instead
+orderSchema.plugin(updateIfCurrentPlugin);
 
 orderSchema.statics.build = (attrs: OrderAttrs) => {
   return new Order({
