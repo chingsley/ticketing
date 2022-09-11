@@ -7,6 +7,7 @@ import {
   NotFoundError,
   currentUser,
 } from '@chingsley_tickets/common';
+import { createChargeRouter } from './routes/new';
 
 const app = express();
 app.set('trust proxy', true);
@@ -20,6 +21,8 @@ app.use(
 
 // must be set below the cookieSession session
 app.use(currentUser);
+
+app.use(createChargeRouter);
 
 app.get('/api/users/healthcheck', (req, res) => {
   res.send('Auth service is up and running....');

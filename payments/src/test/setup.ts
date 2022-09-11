@@ -1,8 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import request from 'supertest';
-import { app } from '../app';
 
 /**
  *  This is to inform Typescript that we'll be
@@ -11,7 +9,7 @@ import { app } from '../app';
  * to be a function that returns a array of strings
  */
 declare global {
-  var signin: () => string[];
+  var signin: (id?: string) => string[];
 }
 
 jest.mock('../nats-wrapper'); // even though the relative path points to the actual impmementaiton of nats-wrapper, jest will intead import the mock version from '__mock__'
@@ -57,10 +55,10 @@ afterAll(async () => {
  * the function is defined in the test setup.ts files which, as defined in
  * the "jest" section of package.json, only executes when jest runs the test
  */
-global.signin = () => {
+global.signin = (id?: string) => {
   // Build a JWT payload. { id, email }
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com',
   };
 
