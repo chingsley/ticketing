@@ -6,19 +6,19 @@ import useRequest from '../../hooks/use-request';
 const NewTicket = () => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
-  const { sendRequest } = useRequest({
-    url: '/api/tickets',
-    method: 'post',
-    body: {
-      title, price,
-    },
-    onSuccess: () => Router.push('/'),
-  });
+  const { sendRequest } = useRequest();
 
   const onSubmit = (event) => {
     event.preventDefault();
 
-    sendRequest();
+    sendRequest({
+      url: '/api/tickets',
+      method: 'post',
+      body: {
+        title, price,
+      },
+      onSuccess: () => Router.push('/'),
+    });
   };
 
   const onBlur = () => {
@@ -31,7 +31,7 @@ const NewTicket = () => {
   return (
     <div>
       <h1>Create a ticket</h1>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit}>{/** all react functions used like this will be called with a default event argument*/}
         <div className="form-group">
           <label>Titlte</label>
           <input

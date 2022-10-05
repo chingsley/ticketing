@@ -2,18 +2,22 @@ import Router from 'next/router';
 import useRequest from "../../hooks/use-request";
 
 const TicketShow = ({ ticket }) => {
-  const { sendRequest } = useRequest({
-    url: '/api/ordrs',
-    method: 'post',
-    body: {
-      ticketId: ticket.id,
-    },
-    onSuccess: (order) => Router.push('/orders/[orderId]', `/orders/${order.id}`),
-  });
+  const { sendRequest } = useRequest();
+
+  const placeOrder = () => {
+    sendRequest({
+      url: '/api/orders',
+      method: 'post',
+      body: {
+        ticketId: ticket.id,
+      },
+      onSuccess: (order) => Router.push('/orders/[orderId]', `/orders/${order.id}`),
+    });
+  };
   return <div>
     <h1>${ticket.title}</h1>
     <h4>Price: {ticket.price}</h4>
-    <button onClick={sendRequest} className="btn btn-primary">Purchase</button>
+    <button onClick={placeOrder} className="btn btn-primary">Purchase</button>
   </div>;
 };
 
