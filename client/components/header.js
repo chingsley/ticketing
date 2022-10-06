@@ -4,9 +4,11 @@ export default ({ currentUser }) => {
   const linksConfigs = [
     !currentUser && { label: 'Sign Up', href: '/auth/signup' },
     !currentUser && { label: 'Sign In', href: '/auth/signin' },
+    currentUser && { label: 'Sell Tickets', href: '/tickets/new' },
+    currentUser && { label: 'My Orders', href: '/orders' },
     currentUser && { label: 'Sign Out', href: '/auth/signout' }
   ];
-  // console.log('>>>>>>>>linksConfigs => ', linksConfigs);
+
   const links = linksConfigs.filter(linkConfig => linkConfig).map(({ label, href }) => {
     console.log({ label, href });
     return <li key={href} className="nav-item">
